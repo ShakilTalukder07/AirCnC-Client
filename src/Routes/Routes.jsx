@@ -3,8 +3,9 @@ import Main from "../Layout/Main";
 import Signup from "../Pages/Login/Signup";
 import Login from "../Pages/Login/Login";
 import Home from "../Pages/Home";
-import ErrorPage from "../Pages/Shared/ErrorPage";
-import Footer from "../Pages/Shared/Footer";
+import Footer from "../Components/Shared/Footer/Footer";
+import ErrorPage from "../Components/Shared/ErrorPage";
+
 
 const router = createBrowserRouter([
     {
