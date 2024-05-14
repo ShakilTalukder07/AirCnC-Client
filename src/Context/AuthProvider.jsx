@@ -1,5 +1,5 @@
 
-import { GoogleAuthProvider, createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from 'firebase/auth'
+import { GoogleAuthProvider, createUserWithEmailAndPassword, getAuth, onAuthStateChanged, sendEmailVerification, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from 'firebase/auth'
 import { app } from '../firebase/firebase.config';
 import { createContext, useEffect, useState } from 'react';
 
@@ -7,59 +7,89 @@ import { createContext, useEffect, useState } from 'react';
 export const AuthContext = createContext(null)
 const auth = getAuth(app)
 
+const googleProvider = new GoogleAuthProvider()
+
 const AuthProvider = ({ children }) => {
 
     const [user, setUser] = useState(null)
     const [loading, setLoading] = useState(true)
 
 
+    //1. Create User
     const createUser = (email, password) => {
-        setLoading(true);
+        setLoading(true)
         return createUserWithEmailAndPassword(auth, email, password)
     }
 
-    const googleProvider = new GoogleAuthProvider();
+    //   2. Update Name
+    const updateUserProfile = (name, photo) => {
+        setLoading(true)
+        return updateProfile(auth.currentUser, {
+            displayName: name,
+            photoURL: photo,
+        })
+    }
 
-    const googleLogin = () => {
-        setLoading(true);
-        return signInWithPopup(auth, googleProvider);
-    };
+    //   3. Email Verify
+    const verifyEmail = () => {
+        setLoading(true)
+        return sendEmailVerification(auth.currentUser)
+    }
 
-    const signIn = (email, password) => {
+    // 4. Google Signin
+    const signInWithGoogle = () => {
+        setLoading(true)
+        return signInWithPopup(auth, googleProvider)
+    }
+
+    // 5. Logout
+    const logout = () => {
+        setLoading(true)
+        localStorage.removeItem('aircnc-token')
+        return signOut(auth)
+    }
+
+    //6. Login with Password
+    const signin = (email, password) => {
         setLoading(true)
         return signInWithEmailAndPassword(auth, email, password)
     }
 
-    const updateUser = userInfo => {
-        return updateProfile(auth.currentUser, userInfo)
+    //7. Forget Password
+    const resetPassword = email => {
+        setLoading(true)
+        return sendPasswordResetEmail(auth, email)
     }
 
     useEffect(() => {
+        //this part will execute once the component is mounted.
         const unsubscribe = onAuthStateChanged(auth, currentUser => {
-            setUser(currentUser);
-            setLoading(false);
-        });
-        return () => unsubscribe();
-    }, [])
+            setUser(currentUser)
+            setLoading(false)
+        })
 
-    const logOut = () => {
-        setLoading(true);
-        return signOut(auth);
-    }
+        return () => {
+            //this part will execute once the component is unmounted.
+            unsubscribe()
+        }
+    }, [])
 
     const authInfo = {
         user,
-        loading,
         createUser,
-        googleLogin,
-        signIn,
-        updateUser,
-        logOut
+        updateUserProfile,
+        verifyEmail,
+        signInWithGoogle,
+        logout,
+        signin,
+        resetPassword,
+        loading,
+        setLoading,
     }
 
     return (
         <AuthContext.Provider value={authInfo}>
-            { children }
+            {children}
         </AuthContext.Provider>
     );
 };
