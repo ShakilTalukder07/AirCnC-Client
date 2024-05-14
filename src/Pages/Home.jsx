@@ -6,7 +6,6 @@ const Home = () => {
     <>
       <Categories />
       <Rooms />
-      <Spinner />
     </>
   )
 }
