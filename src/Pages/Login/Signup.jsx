@@ -20,14 +20,66 @@ const Signup = () => {
 
   const from = location.state?.from?.pathname || '/'
 
+  // Handle user registration
   const handleSubmit = event => {
-
     event.preventDefault()
     const name = event.target.name.value
     const email = event.target.email.value
     const password = event.target.password.value
 
+    // Image Upload
+    const image = event.target.image.files[0]
+
+    console.log(name, email, password, image);
+    const formData = new FormData()
+    formData.append('image', image)
+    // 20f20dece569e71e271fc3b0fd05eda3
+    // https://api.imgbb.com/1/upload?expiration=600&key=YOUR_CLIENT_API_KEY
+
+
+    const url = "https://api.imgbb.com/1/upload?key=20f20dece569e71e271fc3b0fd05eda3"
+    
+    // const url = `https://api.imgbb.com/1/upload?key=${
+    //   import.meta.env.VITE_IMGBB_KEY
+    // }`
+
+    fetch(url, {
+      method: 'POST',
+      body: formData,
+    })
+      .then(res => res.json())
+      .then(imageData => {
+        const imageUrl = imageData.data.display_url
+
+        createUser(email, password)
+          .then(result => {
+            updateUserProfile(name, imageUrl)
+              .then(() => {
+                toast.success('Signup successful')
+                saveUser(result.user)
+                navigate(from, { replace: true })
+              })
+              .catch(err => {
+                setLoading(false)
+                console.log(err.message)
+                toast.error(err.message)
+              })
+          })
+          .catch(err => {
+            setLoading(false)
+            console.log(err.message)
+            toast.error(err.message)
+          })
+      })
+      .catch(err => {
+        setLoading(false)
+        console.log(err.message)
+        toast.error(err.message)
+      })
+
+    return
   }
+
 
   // Handle google signin
   const handleGoogleSignIn = () => {
@@ -148,7 +200,7 @@ const Signup = () => {
           <Link to='/login' className='hover:underline text-gray-600'>
             Sign In
           </Link>
-          
+
         </p>
       </div>
     </div>
