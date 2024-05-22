@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navigate, useNavigate, useSearchParams } from 'react-router-dom';
-// import qs from 'query-string'
+import qs from 'query-string'
 
 const CategoryBox = ({ label, icon: Icon }) => {
     const [params, setParams] = useSearchParams();

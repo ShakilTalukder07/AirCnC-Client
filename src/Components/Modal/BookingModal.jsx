@@ -4,7 +4,8 @@ import { Fragment } from 'react'
 import { loadStripe } from '@stripe/stripe-js'
 import { Elements } from '@stripe/react-stripe-js'
 import CheckoutForm from '../Forms/CheckoutForm'
-const stripePromise = loadStripe(import.meta.env.VITE_Payment_Gateway_PK)
+// const stripePromise = loadStripe(import.meta.env.VITE_Payment_Gateway_PK)
+
 const BookingModal = ({ closeModal, isOpen, bookingInfo }) => {
   return (
     <Transition appear show={isOpen} as={Fragment}>
@@ -67,12 +68,12 @@ const BookingModal = ({ closeModal, isOpen, bookingInfo }) => {
                   </p>
                 </div>
                 <hr className='mt-8 ' />
-                <Elements stripe={stripePromise}>
+                {/* <Elements stripe={stripePromise}> */}
                   <CheckoutForm
                     closeModal={closeModal}
                     bookingInfo={bookingInfo}
                   ></CheckoutForm>
-                </Elements>
+                {/* </Elements> */}
               </Dialog.Panel>
             </Transition.Child>
           </div>

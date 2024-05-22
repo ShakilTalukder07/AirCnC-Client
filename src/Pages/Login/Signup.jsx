@@ -5,6 +5,7 @@ import toast from 'react-hot-toast'
 import { FcGoogle } from 'react-icons/fc'
 import { useContext } from 'react'
 import { AuthContext } from '../../Context/AuthProvider'
+import { saveUser } from '../../api/auth'
 
 const Signup = () => {
 
@@ -13,7 +14,9 @@ const Signup = () => {
     verifyEmail,
     signInWithGoogle,
     loading,
-    setLoading } = useContext(AuthContext)
+    setLoading,
+    updateUserProfile
+  } = useContext(AuthContext)
 
   const navigate = useNavigate()
   const location = useLocation()
@@ -38,10 +41,7 @@ const Signup = () => {
 
 
     const url = "https://api.imgbb.com/1/upload?key=20f20dece569e71e271fc3b0fd05eda3"
-    
-    // const url = `https://api.imgbb.com/1/upload?key=${
-    //   import.meta.env.VITE_IMGBB_KEY
-    // }`
+
 
     fetch(url, {
       method: 'POST',
@@ -55,9 +55,10 @@ const Signup = () => {
           .then(result => {
             updateUserProfile(name, imageUrl)
               .then(() => {
-                toast.success('Signup successful')
+                toast.success('SignUp successful')
                 saveUser(result.user)
-                navigate(from, { replace: true })
+                // navigate(from, { replace: true }),
+                navigate('/')
               })
               .catch(err => {
                 setLoading(false)
@@ -87,7 +88,7 @@ const Signup = () => {
       .then(result => {
         console.log(result.user)
         // save user to db
-        // saveUser(result.user)
+        saveUser(result.user)
         navigate(from, { replace: true })
       })
       .catch(err => {
@@ -101,7 +102,7 @@ const Signup = () => {
     <div className='flex justify-center items-center pt-8 mt-16'>
       <div className='flex flex-col max-w-md p-6 rounded-md sm:p-10 bg-gray-100 text-gray-900'>
         <div className='mb-8 text-center'>
-          <h1 className='my-3 text-4xl font-bold'>Signup</h1>
+          <h1 className='my-3 text-4xl font-bold'>SignUp</h1>
           <p className='text-sm text-gray-400'>Create a new account</p>
         </div>
         <form
@@ -173,7 +174,7 @@ const Signup = () => {
                 type='submit'
                 classes='w-full px-8 py-3 font-semibold rounded-md bg-gray-900 hover:bg-gray-700 hover:text-white text-gray-100'
               >
-                Sign up
+                Sign Up
               </PrimaryButton>
             </div>
           </div>

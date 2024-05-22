@@ -4,6 +4,8 @@ import { useContext, useRef } from 'react'
 import { AuthContext } from '../../Context/AuthProvider'
 import toast from 'react-hot-toast'
 import { FcGoogle } from 'react-icons/fc'
+import { saveUser } from '../../api/auth'
+
 
 const Login = () => {
 
@@ -11,8 +13,9 @@ const Login = () => {
     setLoading,
     signIn,
     signInWithGoogle,
-    resetPassword } =
-    useContext(AuthContext)
+    resetPassword,
+    updateUserProfile
+  } = useContext(AuthContext)
 
   const navigate = useNavigate()
   const location = useLocation()
@@ -24,10 +27,12 @@ const Login = () => {
     event.preventDefault()
     const email = event.target.email.value
     const password = event.target.password.value
+    console.log(email, password);
     signIn(email, password)
       .then(result => {
         console.log(result.user)
-        navigate(from, { replace: true })
+        // navigate(from, { replace: true }),
+        navigate('/')
       })
       .catch(err => {
         setLoading(false)
@@ -42,8 +47,9 @@ const Login = () => {
       .then(result => {
         console.log(result.user)
         // save user to db
-        // saveUser(result.user)
-        navigate(from, { replace: true })
+        saveUser(result.user)
+        navigate(from, { replace: true }),
+          navigate('/')
       })
       .catch(err => {
         setLoading(false)
@@ -72,7 +78,7 @@ const Login = () => {
     <div className='flex justify-center items-center pt-8 mt-16'>
       <div className='flex flex-col max-w-md p-6 rounded-md sm:p-10 bg-gray-100 text-gray-900'>
         <div className='mb-8 text-center'>
-          <h1 className='my-3 text-4xl font-bold'>Sign in</h1>
+          <h1 className='my-3 text-4xl font-bold'>Sign In</h1>
           <p className='text-sm text-gray-400'>
             Sign in to access your account
           </p>
@@ -120,7 +126,7 @@ const Login = () => {
               type='submit'
               classes='w-full px-8 py-3 font-semibold rounded-md bg-gray-900 hover:bg-gray-700 hover:text-white text-gray-100'
             >
-              Sign in
+              Sign In
             </PrimaryButton>
           </div>
         </form>
