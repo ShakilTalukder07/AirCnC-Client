@@ -17,6 +17,7 @@ export const addRoom = async roomData => {
 export const getAllRooms = async () => {
   const response = await fetch("http://localhost:5000/rooms")
   const data = await response.json()
+  // console.log(data);
   return data
 }
 
@@ -27,13 +28,31 @@ export const getRooms = async email => {
   return data
 }
 
+
 // Get single room
-export const getRoom = async id => {
-  const response = await fetch(`http://localhost:5000/rooms/${id}`)
-  const data = await response.json()
-  console.log(data);
-  return data
-}
+// export const getRoom = async id => {
+//   const response = await fetch(`http://localhost:5000/room/${id}`)
+//   const data = await response.json()
+//   console.log(data);
+//   return data
+// }
+
+export const getRoom = async (id) => {
+  try {
+    const response = await fetch(`http://localhost:5000/room/${id}`);
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching room data:', error);
+    throw error; // Rethrow the error if you want it to be handled by the caller
+  }
+};
+
+
 
 // Delete a room
 export const deleteRoom = async id => {

@@ -1,8 +1,9 @@
 import React, { useContext, useState } from 'react'
 import Calender from '../Rooms/Calender'
 import Button from '../Button/Button'
-import { formatDistance } from 'date-fns'
+// import { formatDistance } from 'date-fns'
 import BookingModal from '../Modal/BookingModal'
+import { formatDistance } from 'date-fns'
 import { AuthContext } from '../../Context/AuthProvider'
 // import { addBooking, updateStatus } from '../../api/bookings'
 // import toast from 'react-hot-toast'
@@ -16,10 +17,12 @@ const RoomReservation = ({ roomData }) => {
   }
   const { user } = useContext(AuthContext)
 
+  console.log(user);
+
   // Price Calculation
   const totalPrice =
     parseFloat(
-      formatDistance(new Date(roomData.to), new Date(roomData.from)).split(
+      formatDistance(new Date (), new Date ()).split(
         ' '
       )[0]
     ) * roomData.price
@@ -32,8 +35,8 @@ const RoomReservation = ({ roomData }) => {
 
   // Booking state
   const [bookingInfo, setBookingInfo] = useState({
-    guest: { name: user.displayName, email: user.email, image: user.photoURL },
-    host: roomData.host.email,
+    guest: { name: user?.displayName, email: user?.email, image: user?.photoURL },
+    host: roomData.email,
     location: roomData.location,
     price: totalPrice,
     to: value.endDate,
@@ -77,7 +80,7 @@ const RoomReservation = ({ roomData }) => {
       <div className='p-4'>
         <Button
           onClick={() => setIsOpen(true)}
-          disabled={roomData.host.email === user.email || roomData.booked}
+          disabled={roomData?.email === user?.email || roomData.booked}
           label='Reserve'
         />
       </div>

@@ -5,7 +5,7 @@ const Header = ({ roomData }) => {
   return (
     <>
       <Heading title={roomData.title} subtitle={roomData.location} />
-      <div className='w-full md:h-[60vh] overflow-hidden rounded-xl'>
+      <div className='w-full md:h-[60vh] overflow-hidden rounded-xl mt-8'>
         <img
           className='object-cover w-full'
           src={roomData.image}
